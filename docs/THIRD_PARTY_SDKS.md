@@ -8,6 +8,7 @@ Last reviewed: 2026-11-04. Review again before every release that changes `compo
 
 | Service | Used for | Data sent | Where configured | Contract / DPA needed |
 |---|---|---|---|---|
+| Google Sign-In (Google Identity Services on web, Google OAuth in the app) | Optional "Continue with Google" | Google returns account ID, name and email to us; nothing is sent to Google unless the person clicks the button. On the web the Google script loads only after that click | `GOOGLE_CLIENT_IDS` (API), `VITE_GOOGLE_CLIENT_ID` (web), `EXPO_PUBLIC_GOOGLE_*_CLIENT_ID` (app) | Google API Terms; list it in the Privacy Policy (done) |
 | Chapa | Card, CBE Birr, M-Pesa checkout | Amount, tx_ref, phone, email (if given) | `CHAPA_*` env | Yes |
 | telebirr (Ethio Telecom) | Wallet checkout | Amount, order id, title | `TELEBIRR_*` env | Yes (merchant agreement) |
 | verify.et | Bank and wallet transfer receipt checks | Bank code + transaction reference only | `VERIFY_ET_*` env | Yes |
@@ -27,6 +28,7 @@ Last reviewed: 2026-11-04. Review again before every release that changes `compo
 | expo, expo-router, react-native | mobile | App framework | No analytics by default; do **not** add `expo-insights` or similar without consent |
 | expo-secure-store | mobile | Stores the sign-in token in the OS keychain | No |
 | expo-web-browser | mobile | Opens the telebirr/Chapa page | Only the provider page you open |
+| expo-auth-session, expo-crypto | mobile | Google sign-in flow (PKCE) | Only when the person taps Continue with Google |
 | expo-clipboard | mobile | "Copy account number" button | No |
 | react-native-qrcode-svg, react-native-svg | mobile | Draws ticket QR codes | No |
 | react-native-markdown-display | mobile | Shows legal documents | No |

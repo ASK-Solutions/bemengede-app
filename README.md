@@ -86,6 +86,20 @@ Staff accounts are never self-registered: the admin invites an operator's owner,
 
 **Money split** (in `LedgerService`): the passenger pays fare + service fee. Bemengede keeps the service fee (which also pays the gateway fee) plus a commission on online fares; the operator gets fares minus commission. Counter cash sales are commission-free unless `COMMISSION_ON_COUNTER_SALES=true`. Set the real gateway fee percentages from your Chapa and telebirr contracts (`CHAPA_FEE_PERCENT`, `TELEBIRR_FEE_PERCENT`).
 
+## Sign-in methods
+
+Travellers can sign up and sign in three ways, on the website and in the app:
+1. **Phone number** with a 6-digit SMS code.
+2. **Username and password.** Passwords are stored hashed. After 5 wrong tries the account is locked for a minute. Reset works with a code sent to the account's phone or email.
+3. **Google.** The server verifies every Google token against your own client IDs. An existing account is joined only when both sides have a verified email.
+
+Every new account must tick "I am 18 or older" and accept the terms. People can add or remove sign-in methods under *Account › Sign-in methods*. The last remaining method can't be removed.
+
+To turn on Google, create OAuth client IDs in Google Cloud Console (Web, Android with your SHA-1, iOS) and set:
+- **API:** `GOOGLE_CLIENT_IDS`, all of them, comma-separated.
+- **Web:** `VITE_GOOGLE_CLIENT_ID`.
+- **App:** `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID`, `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID` and `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`. Google sign-in needs a development or store build; it doesn't work in Expo Go.
+
 ## Going live
 
 1. Fill in the `BUSINESS_*` values and set `PAYMENTS_MODE=live` with real Chapa, telebirr and verify.et credentials.
