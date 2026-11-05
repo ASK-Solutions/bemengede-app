@@ -27,6 +27,17 @@ How each launch requirement is met, where to find it in the code, and what still
 | 19 | License stock images | Done · Your action | No stock photos are used. All graphics are made in-house; fonts are OFL. There is a register to fill in before adding any image or any bus company logo (logo needs written permission). | `docs/ASSETS.md` |
 | 20 | Data deletion option | Done · tested | "Delete my account" on web and **inside the app** (required by Apple and Google). There is a 72-hour cooling-off period you can cancel. Names and contact details are erased; payment amounts are kept anonymised, as accounting law requires. Deletion is blocked while a paid trip is still upcoming. Data export (JSON) is also available. | `PrivacyService`, `privacy:process-requests` (hourly), `Account.tsx`, `mobile/app/account.tsx`; tests `test_deletion_is_scheduled_...`, `test_deletion_is_blocked_...`, `test_user_can_export_their_data` |
 
+## Staff portals
+
+The operator portal and platform admin follow the same rules:
+- **Data access:** each company can only read its own passengers. Staff searches and every change are written to the audit log.
+- **Accessibility:** keyboard-usable tables, native dialogs, the same contrast-checked colours.
+- **Fair treatment of customers:**
+  - Counter sales require the agent to confirm the customer saw the price, terms and refund rules, and that the payer is 18 or older.
+  - Policy changes apply only to new bookings.
+  - Operator cancellations always refund in full.
+- **Document handling:** operator licence documents are stored privately and every view is logged.
+
 ## Your actions before launch
 
 1. **Business details:** set `BUSINESS_LEGAL_NAME`, `BUSINESS_TIN`, `BUSINESS_TRADE_LICENSE`, `BUSINESS_ADDRESS`, `BUSINESS_PHONE` and the support emails in `api/.env`.

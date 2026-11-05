@@ -5,7 +5,8 @@ All-in-one intercity bus booking and management platform for Ethiopia.
 ```
 bemengede/
 ├── api/       Laravel 11 API: bookings, seat holds, payments (telebirr, Chapa, verify.et), consents, privacy
-├── web/       React + Vite website: landing page, booking flow, account, legal pages, cookie consent
+├── web/       React + Vite website: landing page, booking flow, account, legal pages, cookie consent,
+│              operator portal (/operator) and platform admin (/admin)
 ├── mobile/    React Native (Expo) app: booking, tickets, account (including in-app deletion)
 ├── docs/      Third-party SDK audit, image licence register
 ├── scripts/   contrast.mjs: WCAG colour-contrast check
@@ -46,7 +47,44 @@ To test bank transfers in mock mode, use these references:
 - A reference ending in `WRONG` was paid to the wrong account, so it also goes to review.
 - A reference ending in `FAIL` is not found.
 
-Demo staff logins (local only): `admin@bemengede.test` and `selam@bemengede.test`, password `password`, via `POST /api/v1/auth/staff`.
+Demo staff logins (local only), at http://localhost:5173/staff/login with password `password`:
+- `selam@bemengede.test` opens the **operator portal** for Selam Bus.
+- `admin@bemengede.test` opens the **platform admin**.
+
+## Operator portal (`/operator`)
+
+Each bus company only ever sees its own data (enforced in every API query, and tested).
+
+| Screen | What it does | Who |
+|---|---|---|
+| Dashboard | Today's departures, seats sold, money in, payment mix, alerts (licence expiry, buses in maintenance, transfers to review) | Owner, agent |
+| Trips & schedules | Create trips (repeat daily), change bus/driver/fare, delay (passengers get an SMS), cancel (everyone gets a full refund including the fee) | Owner creates, both manage |
+| Bookings | Find by reference, phone or name; fix passenger names; cancel under the published policy | Owner, agent |
+| Counter sale | Sell for cash at the terminal with the same prices and seat locks; prints a ticket and sends the SMS | Owner, agent |
+| Payment verifications | Transfers that failed a verify.et check: see each check, approve or reject | Owner, agent |
+| Boarding & manifests | Per-trip manifest, scan QR with the camera (or type the code), printable list | Owner, agent |
+| Fleet & drivers | Buses with seat layouts and amenities; drivers with licence expiry reminders | Owner adds buses |
+| Routes | Routes between shared terminals with stops, duration and usual fare | Owner |
+| Staff & roles | Invite agents or owners by email; remove access | Owner |
+| Payouts & finance | Fares, commission and amount owed per payment method; settlement history | Owner, agent |
+| Reports | Sales by route, channel and method; occupancy per trip; CSV download | Owner, agent |
+| Company settings | Legal details, cancellation policy, brand colour, receiving accounts, licence uploads, booking widget code, onboarding checklist | Owner edits |
+
+## Platform admin (`/admin`)
+
+| Screen | What it does |
+|---|---|
+| Overview | Money in this month, operators by status, transfers waiting, open disputes, refunds due, 14-day chart, top operators |
+| Operators | All 20+ operators with an onboarding checklist built from real data; review licence documents; record the signed agreement; invite the owner; go live (blocked until every step is done) or suspend |
+| Payments & refunds | Read-only provider status (mode, credentials set, webhook URLs, last success); list of refunds to send and record |
+| Settlements | Create settlements for a period: Chapa splits settle automatically, transfers/cash are invoiced for commission, telebirr payouts are marked paid with a bank reference |
+| Disputes | Traveller complaints: resolve or reject with a written answer |
+| Cities & terminals | Shared master data used by all operators |
+| Audit log | Every change, who made it, filterable |
+
+Staff accounts are never self-registered: the admin invites an operator's owner, and the owner invites their agents. Each invitation link is valid for 7 days.
+
+**Money split** (in `LedgerService`): the passenger pays fare + service fee. Bemengede keeps the service fee (which also pays the gateway fee) plus a commission on online fares; the operator gets fares minus commission. Counter cash sales are commission-free unless `COMMISSION_ON_COUNTER_SALES=true`. Set the real gateway fee percentages from your Chapa and telebirr contracts (`CHAPA_FEE_PERCENT`, `TELEBIRR_FEE_PERCENT`).
 
 ## Going live
 
