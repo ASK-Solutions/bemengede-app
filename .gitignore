@@ -1,0 +1,6 @@
+# backend/, frontend/ and mobile/ each have their own .gitignore; these are repo-wide safety nets.
+node_modules/
+.env
+*.sqlite
+.DS_Store
+Thumbs.db

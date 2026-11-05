@@ -1,0 +1,16 @@
+# Local development stack (optional; SQLite works without Docker).
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: bemengede
+      MYSQL_USER: bemengede
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    ports: ["3306:3306"]
+    volumes: [mysql:/var/lib/mysql]
+  mailpit:
+    image: axllent/mailpit:v1.20
+    ports: ["8025:8025", "1025:1025"]
+volumes:
+  mysql:
