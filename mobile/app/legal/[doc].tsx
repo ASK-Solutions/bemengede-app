@@ -1,8 +1,8 @@
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, Text } from 'react-native';
 import Markdown from 'react-native-markdown-display';
-import { s } from '../../components/ui';
+import { Header, st } from '../../components/kit';
 import { api } from '../../lib/api';
 import { c } from '../../lib/theme';
 
@@ -13,11 +13,13 @@ export default function Legal() {
   const [md, setMd] = useState<string | null>(null);
   useEffect(() => { api<{ markdown: string }>(`/legal/${doc}`).then((d) => setMd(d.markdown)).catch(() => setMd('Could not load. Please check your connection.')); }, [doc]);
   return (
-    <ScrollView contentContainerStyle={[s.screen, { backgroundColor: '#fff' }]}>
-      <Stack.Screen options={{ title: TITLES[doc] ?? 'Policy' }} />
-      {md === null ? <Text style={s.body}>Loading…</Text> : (
-        <Markdown style={{ body: { color: c.ink, fontSize: 16, lineHeight: 24 }, heading1: { fontSize: 28, fontWeight: '800' }, heading2: { fontSize: 20, fontWeight: '700', marginTop: 18 }, link: { color: c.green } }}>{md}</Markdown>
-      )}
-    </ScrollView>
+    <>
+      <Header title={TITLES[doc] ?? 'Policy'} />
+      <ScrollView style={{ backgroundColor: '#fff' }} contentContainerStyle={{ padding: 16 }}>
+        {md === null ? <Text style={st.body}>Loading…</Text> : (
+          <Markdown style={{ body: { color: c.ink, fontSize: 16, lineHeight: 24 }, heading1: { fontSize: 26, fontWeight: '800' }, heading2: { fontSize: 19, fontWeight: '700', marginTop: 18 }, link: { color: c.green } }}>{md}</Markdown>
+        )}
+      </ScrollView>
+    </>
   );
 }
